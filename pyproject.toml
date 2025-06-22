@@ -1,0 +1,17 @@
+[project]
+name = "WT-calcInMatchPlaytime"
+version = "0.1.0"
+description = "A Python CLI application that takes a TSV (or CSV) file containing your in-game match time and outputs the total playtime in hours."
+readme = "README.md"
+authors = [
+    { name = "w4tchdoge", email = "w4tchdoge@protonmail.com" }
+]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+wt-playtime = "wt_calcinmatchplaytime:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
