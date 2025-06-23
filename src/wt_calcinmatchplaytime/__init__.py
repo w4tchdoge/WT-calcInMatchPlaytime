@@ -13,7 +13,8 @@ def main() -> None:
 
 	# print(f'\nUser input for the filename arguement is:\n{filepath}\n\nPath exists? : [{filepath.exists()}]')
 
-	assert file_exists, 'Provided file does not exist.'
+	if not file_exists:
+		raise FileNotFoundError("The provided file does not exist.")
 
 	playtime_data = calc.read_input(filepath)
 	# print(tsvdata)

@@ -54,10 +54,16 @@ def read_input(filepath: pathlib.Path) -> list:
 	return rows
 
 
+def secs2hrs(seconds: float) -> float:
+	secsINhrs = 60 * 60
+	hours = seconds / secsINhrs
+	return hours
+
+
 def sum_playtime(tsv: list) -> float:
 	playtimesumdelta = timedelta(seconds=0)
 	for row in tsv:
 		playtimedelta = parse_timedelta(row[1])
 		playtimesumdelta += playtimedelta
-	playtimesum = round((playtimesumdelta.total_seconds() / (60 * 60)), 3)
+	playtimesum = round(secs2hrs(playtimesumdelta.total_seconds()), 3)
 	return playtimesum
