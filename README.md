@@ -2,6 +2,11 @@
 
 Calculate how much time you've spent in-match in War Thunder using an input file with your playtimes taken from your statistics page.
 
+For information about the parameters passed to the CLI application please check the help text with the command:
+```console
+wt-playtime --help
+```
+
 ## Installation
 
 Installation requires Python >= 3.9, as I have written this with [`pipx`](https://pipx.pypa.io/stable/) in mind.
