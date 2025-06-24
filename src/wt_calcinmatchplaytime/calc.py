@@ -39,17 +39,23 @@ def parse_timedelta(value: str) -> timedelta:
 	return timedelta(**params)
 
 
-def read_input(filepath: pathlib.Path, has_header: bool = True) -> list:
+def read_input(filepath: pathlib.Path, ignore_header: bool = True, is_tsv: bool = True) -> list:
 	fileext = filepath.suffix
 	file_delimiter = '\t'
 	if fileext == '.csv':
+		file_delimiter = ','
+
+	# User forced delimiter
+	if is_tsv:
+		file_delimiter = '\t'
+	else:
 		file_delimiter = ','
 
 	fields = []
 	rows = []
 	with open(filepath, 'r') as input:
 		reader = csv.reader(input, delimiter=file_delimiter, quotechar='"')
-		if has_header:
+		if not ignore_header:
 			fields = next(reader)
 		for row in reader:
 			rows.append(row)
