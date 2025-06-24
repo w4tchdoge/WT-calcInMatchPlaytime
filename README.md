@@ -11,6 +11,8 @@ wt-playtime --help
 
 Installation requires Python >= 3.9, as I have written this with [`pipx`](https://pipx.pypa.io/stable/) in mind.
 
+For Python installation instructions please refer to [the Python wiki page on downloading and installing Python](https://wiki.python.org/moin/BeginnersGuide/Download).
+
 For `pipx` installation instructions please refer to [the `pipx` homepage](https://pipx.pypa.io/stable/).
 
 ### Install From GitHub
