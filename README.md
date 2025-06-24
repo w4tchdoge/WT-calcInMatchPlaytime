@@ -29,9 +29,10 @@ pipx install path/to/this/git/repo
     **N.B.** The example files contain `Time Played` entries from a single game mode.
 
     <details>
-    <summary> Example <code>.tsv</code> file:</summary>
+    <summary> Example <code>.tsv</code> file with headers:</summary>
 
     ```
+    Category	Time Played
     Time played (fighter)	32d
     Time played (Bomber)	1d 01h
     Time played (Attacker)	9d
@@ -48,7 +49,7 @@ pipx install path/to/this/git/repo
     </details>
 
     <details>
-    <summary>Example <code>.csv</code> file:</summary>
+    <summary>Example <code>.csv</code> file without headers:</summary>
 
     ```
     Time played (fighter), 32d
@@ -69,6 +70,12 @@ pipx install path/to/this/git/repo
 
 3. Run the CLI application with the `.tsv`/`.csv` file as an input.
 
+    Process input file which contains headers:
+    ```console
+    wt-playtime -nh -i .\input.tsv
+    ```
+
+    Process input file which does not contain headers:
     ```console
     wt-playtime -i .\input.tsv
     ```
