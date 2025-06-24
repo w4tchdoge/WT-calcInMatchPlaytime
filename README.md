@@ -24,7 +24,7 @@ pipx install git+https://github.com/w4tchdoge/WT-calcInMatchPlaytime.git
 ### Install From Local Folder
 
 ```console
-pipx install path/to/this/git/repo
+pipx install path/to/this/git/repo/on-your/local-filesystem
 ```
 
 ## Example Usage
