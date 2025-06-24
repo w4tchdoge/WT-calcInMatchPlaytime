@@ -13,6 +13,12 @@ Installation requires Python >= 3.9, as I have written this with [`pipx`](https:
 
 For `pipx` installation instructions please refer to [the `pipx` homepage](https://pipx.pypa.io/stable/).
 
+### Install From GitHub
+
+```console
+pipx install git+https://github.com/w4tchdoge/WT-calcInMatchPlaytime.git
+```
+
 ### Install From Local Folder
 
 ```console
