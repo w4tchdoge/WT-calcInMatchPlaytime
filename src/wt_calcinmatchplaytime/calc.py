@@ -75,3 +75,9 @@ def sum_playtime(tsv: list) -> float:
 		playtimesumdelta += playtimedelta
 	playtimesum = round(secs2hrs(playtimesumdelta.total_seconds()), 3)
 	return playtimesum
+
+
+def calc_playtime(filepath: pathlib.Path, ignore_header: bool = True, is_tsv: bool = True) -> float:
+	playtime_data = read_input(filepath=filepath, ignore_header=ignore_header, is_tsv=is_tsv)
+	playtime = sum_playtime(playtime_data)
+	return playtime

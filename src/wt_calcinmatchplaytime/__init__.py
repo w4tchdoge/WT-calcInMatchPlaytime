@@ -3,9 +3,67 @@ import pathlib
 from wt_calcinmatchplaytime import calc
 
 
+def forfile(args: argparse.Namespace, inpistsv: bool = True) -> None:
+	path = pathlib.Path(args.filename).resolve()
+	path_exists = path.exists()
+	# print(f'\nUser input for the filename arguement is:\n{filepath}\n\nPath exists? : [{filepath.exists()}]')
+	if not path_exists:
+		raise FileNotFoundError("The provided path does not exist.")
+
+	path_is_file = path.is_file()
+	if not path_is_file:
+		raise IsADirectoryError("The provided path does not point to a file.")
+
+	playtime = calc.calc_playtime(path, args.no_headers, inpistsv)
+	print(f'{playtime} hours')
+
+
+def fordir(args: argparse.Namespace, inpistsv: bool = True) -> None:
+
+	def upd_playtime_dict(inpdict: dict, inppath: pathlib.Path) -> None:
+		filename = inppath.name
+		playtime = calc.calc_playtime(inppath, args.no_headers, inpistsv)
+		inpdict.update({
+			filename: f"{playtime} hours"
+		})
+
+	path = pathlib.Path(args.directory).resolve()
+	path_exists = path.exists()
+	if not path_exists:
+		raise FileNotFoundError("The provided path does not exist.")
+
+	path_is_dir = path.is_dir()
+	if not path_is_dir:
+		raise NotADirectoryError("The provided path does not point to a directory.")
+
+	# print(path)
+
+	file_playtimes = {}
+
+	if args.recurse:
+		for child in path.rglob('*'):
+			if child.is_file():
+				upd_playtime_dict(file_playtimes, child)
+	else:
+		for child in path.iterdir():
+			if child.is_file():
+				upd_playtime_dict(file_playtimes, child)
+
+	# print(file_playtimes)
+	file_playtimes_sorted = dict(sorted(file_playtimes.items()))
+
+	for k, v in file_playtimes_sorted.items():
+		print(f'{k} : {v}')
+
+
 def main() -> None:
-	parser = argparse.ArgumentParser(description="A Python CLI application that takes a TSV (or CSV) file containing your in-game match time and outputs the total playtime in hours.")
-	parser.add_argument("-i", "--filename", required=True, help="TSV (or CSV) file that contains the in-match playtime. col 1 of the file is vehicle type and col 2 is time played")
+	parser = argparse.ArgumentParser(description="A Python CLI application that takes a TSV/CSV file (defaults to TSV) containing your in-game match time and outputs the total playtime in hours.")
+
+	input_types = parser.add_mutually_exclusive_group()
+	input_types.add_argument("-i", "--filename", help="TSV/CSV file (defaults to TSV) that contains the in-match playtime. col 1 of the file is vehicle type and col 2 is time played")
+	input_types.add_argument("-d", "--directory", help="Directory that contains the files to be passed as input to the app. Will not look in subdirectories")
+
+	parser.add_argument("-r", "--recurse", help="Recurse subdirectories when the path passed to the CLI app points to a directory", action="store_true")
 	parser.add_argument("-nh", "--no-headers", help="Indicate that the input file does not have headers", action="store_true")
 
 	force_delim = parser.add_mutually_exclusive_group()
@@ -14,6 +72,11 @@ def main() -> None:
 
 	args = parser.parse_args()
 	# print(args)
+	# print(type(args))
+	# print('')
+
+	if args.filename is None and args.directory is None:
+		raise Exception("An argument for either --filename or --directory must be passed.")
 
 	input_is_tsv = True
 	if args.csv:
@@ -21,18 +84,7 @@ def main() -> None:
 	if args.tsv:
 		input_is_tsv = True
 
-	filepath = pathlib.Path(args.filename).resolve()
-	file_exists = filepath.exists()
-
-	# print(f'\nUser input for the filename arguement is:\n{filepath}\n\nPath exists? : [{filepath.exists()}]')
-
-	if not file_exists:
-		raise FileNotFoundError("The provided file does not exist.")
-
-	playtime_data = calc.read_input(filepath, args.no_headers, input_is_tsv)
-
-	# print(playtime_data)
-	# print("\n")
-
-	playtime = calc.sum_playtime(playtime_data)
-	print(f'{playtime} hours')
+	if args.filename is not None:
+		forfile(args=args, inpistsv=input_is_tsv)
+	if args.directory is not None:
+		fordir(args=args, inpistsv=input_is_tsv)
