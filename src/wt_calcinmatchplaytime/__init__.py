@@ -1,5 +1,6 @@
 import argparse
 import pathlib
+from binaryornot.check import is_binary
 from wt_calcinmatchplaytime import calc
 
 
@@ -21,10 +22,10 @@ def forfile(args: argparse.Namespace, inpistsv: bool = True) -> None:
 def fordir(args: argparse.Namespace, inpistsv: bool = True) -> None:
 
 	def upd_playtime_dict(inpdict: dict, inppath: pathlib.Path) -> None:
-		filename = inppath.name
+		filename = inppath.name.removesuffix("".join(inppath.suffixes))
 		playtime = calc.calc_playtime(inppath, args.no_headers, inpistsv)
 		inpdict.update({
-			filename: f"{playtime} hours"
+			filename: str(playtime)
 		})
 
 	path = pathlib.Path(args.directory).resolve()
@@ -43,17 +44,23 @@ def fordir(args: argparse.Namespace, inpistsv: bool = True) -> None:
 	if args.recurse:
 		for child in path.rglob('*'):
 			if child.is_file():
-				upd_playtime_dict(file_playtimes, child)
+				if not is_binary(str(child.resolve())):
+					upd_playtime_dict(file_playtimes, child)
 	else:
 		for child in path.iterdir():
 			if child.is_file():
-				upd_playtime_dict(file_playtimes, child)
+				if not is_binary(str(child.resolve())):
+					upd_playtime_dict(file_playtimes, child)
 
 	# print(file_playtimes)
 	file_playtimes_sorted = dict(sorted(file_playtimes.items()))
 
+	max_key_len = max(map(len, file_playtimes_sorted.keys()))
+	max_val_len = max(map(len, file_playtimes_sorted.values()))
+	# print(f'Max Key Len : {max_key_len}\nMax Val Len : {max_val_len}\n')
+
 	for k, v in file_playtimes_sorted.items():
-		print(f'{k} : {v}')
+		print(f'{k:<{max_key_len}} : {v:>{max_val_len}} hours')
 
 
 def main() -> None:
